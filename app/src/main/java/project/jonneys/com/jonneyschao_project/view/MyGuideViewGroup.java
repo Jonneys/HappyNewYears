@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Scroller;
 
 import java.util.List;
@@ -59,7 +60,15 @@ public class MyGuideViewGroup extends ViewGroup {
             public void onVerticalPageSelected(int position);
         }
 
-        /**
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(verticalPageChangeListener!=null){
+            verticalPageChangeListener.onVerticalPageSelected(0);
+        }
+    }
+
+    /**
          * 提供一个页面改变的监听器
          */
         public void setOnVerticalPageChangeListener(OnVerticalPageChangeListener onVerticalPageChangeListener) {
@@ -67,7 +76,7 @@ public class MyGuideViewGroup extends ViewGroup {
         }
 
         /**
-         * 为ViewPager设置页面视图
+         * 为ViewPager设置页面视图，在外部调用，让其默认显示第一个View
          * @param viewList 页面视图集合
          */
         public void setViewList(List<View> viewList) {
@@ -81,7 +90,21 @@ public class MyGuideViewGroup extends ViewGroup {
             scrollTo(0, 0);
         }
 
-        /**
+
+    /**
+     * 重写此方法用来计算高度和宽度
+     */
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // 其中包含setMeasuredDimension方法，它是一个很关键的函数，它对View的成员变量mMeasuredWidth和mMeasuredHeight变量赋值
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        // 得到多少页(子View)并设置他们的宽和高
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
+
+    /**
          * 重写此方法为子View进行布局，此布局默认将第一个子View显示在界面上，其他三个依次在该子View下方
          */
         @Override
@@ -98,21 +121,9 @@ public class MyGuideViewGroup extends ViewGroup {
             }
         }
 
-        /**
-         * 重写此方法用来计算高度和宽度
-         */
-        @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            // 其中包含setMeasuredDimension方法，它是一个很关键的函数，它对View的成员变量mMeasuredWidth和mMeasuredHeight变量赋值
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            // 得到多少页(子View)并设置他们的宽和高
-            for (int i = 0; i < getChildCount(); i++) {
-                getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
-            }
-        }
 
         /**
-         * 根据目前的位置滚动到下一个视图位置
+         * 根据目前的位置滚动到下一个视图位置，注意此方法被调用的位置，因为里面使用了getHeight();
          */
         public void snapToDestination() {
             // 这个高度是View可见部分的高度
@@ -127,8 +138,9 @@ public class MyGuideViewGroup extends ViewGroup {
             if (getScrollY() != (whichScreen * getHeight())) {
 
                 final int delta = whichScreen * getHeight() - getScrollY();
+                //startX(0), startY(getScrollY)为开始滚动的位置，dx(0),dy(delta)为滚动的偏移量，Math.abs(delta)*2/3为完成滚动的时间
                 scroller.startScroll(0, getScrollY(), 0, delta,
-                        Math.abs(delta)/4);
+                        Math.abs(delta)*2/3);
                 curScreen = whichScreen;
                 invalidate(); // 重新布局
                 if (verticalPageChangeListener != null)
@@ -137,15 +149,17 @@ public class MyGuideViewGroup extends ViewGroup {
         }
 
     /**
-     * 该方法这里没有用到************************************************************************
+     * 该方法用于外部调用
      * @param whichScreen
      */
         public void setToScreen(int whichScreen) {
             whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
+            scroller.startScroll(0,(whichScreen-1)*getChildAt(0).getMeasuredHeight(),0,getChildAt(0).getMeasuredHeight(),1500);
             curScreen = whichScreen;
-            scrollTo(0, whichScreen * getHeight());
-            if (verticalPageChangeListener != null)
-                verticalPageChangeListener.onVerticalPageSelected(whichScreen);
+            invalidate();
+//            scrollTo(0, whichScreen * getHeight());
+//            if (verticalPageChangeListener != null)
+//                verticalPageChangeListener.onVerticalPageSelected(whichScreen);
         }
 
         /**

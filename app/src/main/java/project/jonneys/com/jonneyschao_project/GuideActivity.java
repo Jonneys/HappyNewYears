@@ -1,12 +1,12 @@
 package project.jonneys.com.jonneyschao_project;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -18,8 +18,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,17 +62,18 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         initView();//初始化View
         initData();//初始化数据
         initListener();//实现监听事件
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initAnimation();//初始化音乐动画
+        initMusicAnimation();//初始化音乐动画
         initMusic();//初始化音乐并播放
+
+
     }
 
-    private void initAnimation() {
+    private void initMusicAnimation() {
         RotateAnimation rotate = AnimationUtil.getRotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         ScaleAnimation scale = AnimationUtil.getScaleAnimation(1.0f, 0.6f, 1.0f, 0.6f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         AlphaAnimation alpha = AnimationUtil.getAlphaAnimation(1.0f, 0.5f);
@@ -89,9 +89,8 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
 
     }
-    private String[] tvguides =new String[] {"春天来了","夏天来了","秋天来了","冬天来了"};
-    private void initData() {
 
+    private void initData() {
         //初始化引导按钮动画
         initUpImageButtonAnimation();
 
@@ -100,14 +99,11 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
             view = getLayoutInflater().inflate(R.layout.layout_viewpager, null);
             ImageView img = (ImageView) view.findViewById(R.id.pager);
             imgbutton = (ImageButton) view.findViewById(R.id.imagebtn_guide);
-//            img.setBackgroundResource(imgSource[i]);
-            int screenWidht = ScreenInfoUtil.getScreenWidht(this);
-            int screenHeight = ScreenInfoUtil.getScreenHeight(this);
+            int screenWidht = ScreenInfoUtil.getScreenWidht(GuideActivity.this);
+            int screenHeight = ScreenInfoUtil.getScreenHeight(GuideActivity.this);
             Bitmap bitmap = BigBitmapUtil.getBitmap(getResources(), imgSource[i], screenWidht, screenHeight);
             img.setImageBitmap(bitmap);
             imgbutton.setImageResource(imgButtonResource[i]);
-            imgbutton.setOnClickListener(this);
-            imgbutton.startAnimation(imgButtonSet);
             viewList.add(view);
         }
         //将view添加到自定义的ViewPager中
@@ -151,9 +147,21 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onVerticalPageSelected(int position) {
-                if (position == imgSource.length - 1) {
-                    imgbutton.setImageResource(R.mipmap.enter_guide);
+                View view =  viewList.get(position);
+                imgbutton = (ImageButton) view.findViewById(R.id.imagebtn_guide);
+                switch (position){
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        imgbutton.setBackgroundResource(R.mipmap.enter_guide);
+                        break;
                 }
+                imgbutton.startAnimation(imgButtonSet);
+                imgbutton.setOnClickListener(GuideActivity.this);
             }
         });
     }
@@ -180,18 +188,45 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.imagebtn_guide:
-                SharedPreferencesUtil.setBoolean(this,"isFirst",false,MODE_PRIVATE);
-                Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                View currentView = mViewPager.getCurrentView();
+//                for (int i=0;i<viewList.size()-1;i++){
+//                    if(currentView==viewList.get(i)){
+//                        mViewPager.setToScreen(i+1);
+//                    }
+//                }
+                if(currentView==viewList.get(0)){
+                    mViewPager.setToScreen(1);
+                }
+                if(currentView==viewList.get(1)){
+                    mViewPager.setToScreen(2);
+                }
+                if(currentView==viewList.get(2)){
+                    mViewPager.setToScreen(3);
+                }
+                if(currentView==viewList.get(viewList.size()-1)){
+                    SharedPreferencesUtil.setBoolean(this,"isFirst",false,MODE_PRIVATE);
+                    Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
                 break;
         }
     }
 
     @Override
+    protected void onStop() {
+        finish();
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
-        mBtn_music.clearAnimation();
-        imgbutton.clearAnimation();
+        if(mBtn_music.getAnimation().hasStarted()){
+            mBtn_music.clearAnimation();
+        }
+        if(imgbutton.getAnimation().hasStarted()){
+            imgbutton.clearAnimation();
+        }
         if(mp.isPlaying()){
             mp.release();
         }

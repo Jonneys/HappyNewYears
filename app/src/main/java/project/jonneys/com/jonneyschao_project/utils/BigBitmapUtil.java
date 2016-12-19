@@ -23,14 +23,16 @@ public class BigBitmapUtil {
     private static int getinSampleSize(BitmapFactory.Options options,int reqWidth,int reqHeight) {
         final int bitmapWidth = options.outWidth;
         final int bitmapHeight = options.outHeight;
-        int inSampleSize = 1;
-        if(bitmapHeight>reqHeight || bitmapWidth>reqWidth){
-            final int halfHeight = bitmapHeight/2;
-            final int halfWidht = bitmapWidth/2;
-            while((halfHeight/inSampleSize)>reqHeight && (halfWidht/inSampleSize)>reqWidth){
-                inSampleSize*=2;
-            }
+        int scale = 1;
+        int scaleX = bitmapWidth/reqWidth;
+        int scaleY = bitmapHeight/reqHeight;
+
+        if(scaleX>scaleY && scaleX>scale){
+            scale = scaleX;
+        }else if(scaleY>scaleX && scaleY>scale){
+            scale = scaleY;
         }
+        int inSampleSize = options.inSampleSize = scale;
         return inSampleSize;
     }
 }
