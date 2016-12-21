@@ -138,28 +138,26 @@ public class MyGuideViewGroup extends ViewGroup {
             if (getScrollY() != (whichScreen * getHeight())) {
 
                 final int delta = whichScreen * getHeight() - getScrollY();
-                //startX(0), startY(getScrollY)为开始滚动的位置，dx(0),dy(delta)为滚动的偏移量，Math.abs(delta)*2/3为完成滚动的时间
+                //startX(0), startY(getScrollY)为开始滚动的位置，dx(0),dy(delta)为滚动的偏移量，Math.abs(delta)为完成滚动的时间
                 scroller.startScroll(0, getScrollY(), 0, delta,
-                        Math.abs(delta)*2/3);
+                        Math.abs(delta));
                 curScreen = whichScreen;
                 invalidate(); // 重新布局
-                if (verticalPageChangeListener != null)
+                if (verticalPageChangeListener != null){
                     verticalPageChangeListener.onVerticalPageSelected(whichScreen);
+                }
             }
         }
 
     /**
-     * 该方法用于外部调用
+     * 该方法用于外部调用,设置定位到哪一页
      * @param whichScreen
      */
         public void setToScreen(int whichScreen) {
             whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
-            scroller.startScroll(0,(whichScreen-1)*getChildAt(0).getMeasuredHeight(),0,getChildAt(0).getMeasuredHeight(),1500);
+            scroller.startScroll(0,(whichScreen-1)*getHeight(),0,getHeight(),1500);
             curScreen = whichScreen;
             invalidate();
-//            scrollTo(0, whichScreen * getHeight());
-//            if (verticalPageChangeListener != null)
-//                verticalPageChangeListener.onVerticalPageSelected(whichScreen);
         }
 
         /**
@@ -222,7 +220,6 @@ public class MyGuideViewGroup extends ViewGroup {
                     lastMotionY = y;
                     if ((curScreen == getChildCount() - 1 && deltay > 0)
                             || (curScreen == 0 && deltay < 0)) {
-
                     }else{
                         scrollBy(0, deltay);
                     }

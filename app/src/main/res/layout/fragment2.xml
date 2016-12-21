@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00fff0"
+    android:orientation="vertical" >
+
+    <HorizontalScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <RadioGroup
+            android:id="@+id/group_f2"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:orientation="horizontal" 
+            android:background="#05a94a">
+
+            <RadioButton
+                android:id="@+id/radio0_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="头条" />
+
+            <RadioButton
+                android:id="@+id/radio1_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="38dp"
+                android:layout_weight="1"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="国际" />
+
+            <RadioButton
+                android:id="@+id/radio2_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="38dp"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="军事" />
+
+            <RadioButton
+                android:id="@+id/radio3_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="38dp"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="科技" />
+
+            <RadioButton
+                android:id="@+id/radio4_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="38dp"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="社会" />
+
+            <RadioButton
+                android:id="@+id/radio5_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="38dp"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="娱乐" />
+
+            <RadioButton
+                android:id="@+id/radio6_f2"
+                android:layout_weight="1"
+                android:layout_marginLeft="38dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="财经" />
+
+            <RadioButton
+                android:id="@+id/radio7_f2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="38dp"
+                android:textColor="@drawable/color_all2"
+                android:button="@null"
+                android:gravity="center"
+                android:text="时尚" />
+
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_f2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

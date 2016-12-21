@@ -1,5 +1,6 @@
 package project.jonneys.com.jonneyschao_project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -26,10 +28,10 @@ import java.util.List;
 
 import project.jonneys.com.jonneyschao_project.utils.AnimationUtil;
 import project.jonneys.com.jonneyschao_project.utils.BigBitmapUtil;
+import project.jonneys.com.jonneyschao_project.utils.ImmersedStatusbarUtils;
 import project.jonneys.com.jonneyschao_project.utils.ScreenInfoUtil;
 import project.jonneys.com.jonneyschao_project.utils.SharedPreferencesUtil;
 import project.jonneys.com.jonneyschao_project.view.MyGuideViewGroup;
-
 
 public class GuideActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,6 +60,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_guide);
         initView();//初始化View
         initData();//初始化数据
@@ -93,21 +96,19 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     private void initData() {
         //初始化引导按钮动画
         initUpImageButtonAnimation();
-
+        int screenWidht = ScreenInfoUtil.getScreenWidht(GuideActivity.this);
+        int screenHeight = ScreenInfoUtil.getScreenHeight(GuideActivity.this);
         //通过for循环将要滑动的view初始化并添加到List中
         for (int i = 0; i < imgSource.length; i++) {
             view = getLayoutInflater().inflate(R.layout.layout_viewpager, null);
             ImageView img = (ImageView) view.findViewById(R.id.pager);
-            imgbutton = (ImageButton) view.findViewById(R.id.imagebtn_guide);
-            int screenWidht = ScreenInfoUtil.getScreenWidht(GuideActivity.this);
-            int screenHeight = ScreenInfoUtil.getScreenHeight(GuideActivity.this);
             Bitmap bitmap = BigBitmapUtil.getBitmap(getResources(), imgSource[i], screenWidht, screenHeight);
             img.setImageBitmap(bitmap);
-            imgbutton.setImageResource(imgButtonResource[i]);
             viewList.add(view);
         }
         //将view添加到自定义的ViewPager中
         mViewPager.setViewList(viewList);
+        imgbutton.startAnimation(imgButtonSet);
 
     }
 
@@ -142,26 +143,26 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
     private void initListener() {
         mBtn_music.setOnClickListener(this);
+        imgbutton.setOnClickListener(this);
         //如果当前引导页显示的是最后一个页面，改变该引导页面的引导按钮图片
         mViewPager.setOnVerticalPageChangeListener(new MyGuideViewGroup.OnVerticalPageChangeListener() {
 
             @Override
             public void onVerticalPageSelected(int position) {
-                View view =  viewList.get(position);
-                imgbutton = (ImageButton) view.findViewById(R.id.imagebtn_guide);
                 switch (position){
                     case 0:
+                        imgbutton.setImageResource(imgButtonResource[0]);
                         break;
                     case 1:
+                        imgbutton.setImageResource(imgButtonResource[1]);
                         break;
                     case 2:
+                        imgbutton.setImageResource(imgButtonResource[2]);
                         break;
                     case 3:
-                        imgbutton.setBackgroundResource(R.mipmap.enter_guide);
+                        imgbutton.setImageResource(R.mipmap.enter_guide);
                         break;
                 }
-                imgbutton.startAnimation(imgButtonSet);
-                imgbutton.setOnClickListener(GuideActivity.this);
             }
         });
     }
@@ -170,7 +171,9 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         mViewPager = (MyGuideViewGroup) findViewById(R.id.viewpager_guide);
         mBtn_music = (Button) findViewById(R.id.btn_music_guide);
         viewList = new ArrayList<View>();
+        imgbutton = (ImageButton) findViewById(R.id.imagebtn_guide);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -196,11 +199,14 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 //                }
                 if(currentView==viewList.get(0)){
                     mViewPager.setToScreen(1);
+                    imgbutton.setImageResource(imgButtonResource[1]);
                 }
                 if(currentView==viewList.get(1)){
                     mViewPager.setToScreen(2);
+                    imgbutton.setImageResource(imgButtonResource[2]);
                 }
                 if(currentView==viewList.get(2)){
+                    imgbutton.setImageResource(R.mipmap.enter_guide);
                     mViewPager.setToScreen(3);
                 }
                 if(currentView==viewList.get(viewList.size()-1)){

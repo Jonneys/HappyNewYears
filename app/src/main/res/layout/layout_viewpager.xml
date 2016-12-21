@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:background="#F00"/>
-
+<!--
     <ImageButton
         android:id="@+id/imagebtn_guide"
         android:layout_width="wrap_content"
@@ -18,5 +18,5 @@
         android:layout_marginBottom="12dp"
         android:padding="10dp"
         android:background="@android:color/transparent"
-        android:src="@mipmap/up_guide"/>
+        android:src="@mipmap/up_guide"/>-->
 </FrameLayout>

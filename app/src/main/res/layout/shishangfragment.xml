@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <project.jonneys.com.jonneyschao_project.view.RefreshListView
+        android:id="@+id/listview_shishang"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </project.jonneys.com.jonneyschao_project.view.RefreshListView>
+    
+      <TextView 
+         android:id="@+id/tv_shishang"
+         android:layout_gravity="center_horizontal"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="请检查网络是否连接！"
+         android:layout_marginTop="20dp"
+         android:alpha="0.6"
+         android:visibility="gone"/>
+     
+     <ImageView 
+         android:id="@+id/iv_shishang"
+         android:layout_width="160dp"
+         android:layout_height="160dp"
+         android:layout_marginTop="50dp"
+         android:src="@mipmap/ic_launcher"
+         android:alpha="0.5"
+         android:layout_gravity="center"
+         android:visibility="gone"/>
+
+</LinearLayout>
